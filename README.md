@@ -1,4 +1,4 @@
-# ✨ HacktoberShield: SpamBuster for PRs 🛡️
+# ✨ HacktoberShield: SpamBuster for PRs 🛡️ [WIP]
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/velocitatem/hacktobershield)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
