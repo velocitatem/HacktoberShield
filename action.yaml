@@ -1,5 +1,5 @@
 name: Anti-Spam PR Checker with Diff and OpenAI Evaluation
-
+description:  HacktoberShield Alpha scans incoming PRs for spam content using OpenAI GPT, ensuring a cleaner, safer repo this Hacktoberfest. 
 on:
   pull_request:
     types: [opened, synchronize]
