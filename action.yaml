@@ -1,1 +1,66 @@
+name: Anti-Spam PR Checker with Diff and OpenAI Evaluation
 
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check_spam:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v14.6
+
+    - name: Get diffs of changed files
+      run: |
+        for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          git diff origin/main...HEAD -- $file > ${{ github.workspace }}/${file}.diff
+        done
+
+    - name: Debugging OpenAI API Call
+      run: |
+        for file in README.md; do
+          file_path="/home/runner/work/better-hacktoberfest/better-hacktoberfest/${file}.diff"
+          if [[ -f "$file_path" ]]; then
+            diff_content=$(cat "$file_path")
+            prompt_content="It is now hacktober-fest and there is a lot of spam going around. Many people contribute almost useless code that only wastes the maintainer's time. Evaluate if the following code diff is spam that is non-genuine and could be a waste:\n\n$diff_content"
+        
+            echo "Debug: Content of $file_path:"
+            echo "$diff_content"
+        
+            echo "Debug: Sending the following prompt to OpenAI API:"
+            echo "$prompt_content"
+        
+            escaped_prompt=$(echo -n "$prompt_content" | jq -aRs .)
+        
+            payload="{\"model\": \"text-davinci-003\", \"prompt\": $escaped_prompt, \"max_tokens\": 50, \"temperature\": 0}"
+            
+            echo "Debug: Payload being sent:"
+            echo "$payload"
+        
+            evaluation=$(curl -s \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+              -d "$payload" \
+              "https://api.openai.com/v1/completions")
+        
+            echo "Debug: Raw API response:"
+            echo "$evaluation"
+        
+            evaluation_text=$(echo "$evaluation" | jq -r '.choices[0].text')
+            echo "OpenAI Evaluation for $file: $evaluation_text"
+          else
+            echo "No diff file found for $file"
+          fi
+        done
+      shell: /usr/bin/bash -e {0}
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    
