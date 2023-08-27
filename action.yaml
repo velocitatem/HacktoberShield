@@ -10,14 +10,5 @@ inputs:
     required: true
 
 runs:
-  using: 'composite'
-  steps:
-    - name: debug
-      run: pwd && ls -la
-      shell: bash
-    - name: Install dependencies
-      run: npm init -y &&  npm install @actions/core @actions/github
-      shell: bash
-    - name: Run main script
-      run: node index.js
-      shell: bash
+  using: 'node12'
+  main: 'index.js'

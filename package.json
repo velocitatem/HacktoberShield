@@ -1,0 +1,16 @@
+{
+  "name": "hacktobershield",
+  "version": "1.0.0",
+  "description": "![GitHub release (latest by date)](https://img.shields.io/github/v/release/velocitatem/hacktobershield) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Hacktoberfest](https://img.shields.io/badge/Hacktoberfest-Friendly-orange.svg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1"
+  }
+}
