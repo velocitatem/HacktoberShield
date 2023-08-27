@@ -54,16 +54,6 @@ async function run() {
         core.debug(`Messages payload: ${messagesPayload}`);
 
 
-        // comment on the PR, just a hello world
-        await octokit.issues.createComment({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: github.context.issue.number,
-            body: `Hello @${actor}! Thanks for opening this PR. I have evaluated your PR and here is the result: ${spamLikelihood}%. Your profile has also been checked for spam, here is the result: ${spamLikelihood}%. If you think this is a mistake, please contact us.`
-        });
-
-
-
 
     } catch (error) {
         core.setFailed(error.message);
