@@ -1,79 +1,12 @@
 name: HacktoberShield
 description:  HacktoberShield Alpha scans incoming PRs for spam content using OpenAI GPT, ensuring a cleaner, safer repo this Hacktoberfest.
-icon: life-buoy
-on:
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  check_spam:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Show GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-        ACTOR: ${{ github.actor }}
-      run: echo "$GITHUB_CONTEXT"
-
-    - name: Check Account Abuse Likelihood
-      env:
-        ACTOR: ${{ github.actor }}
-      run: |
-        username=$ACTOR
-        response=$(curl -s "https://790a-2a0c-5a80-1f10-3f00-2506-17cf-1cfe-ba07.ngrok-free.app/check?username=$username")
-        echo $response
-        if [[ $response != *"Not spam"* ]]; then
-          echo "User is a suspected spammer"
-          exit 1
-        fi
-
-    - name: Get changed files
-      id: changed-files
-      uses: tj-actions/changed-files@v14.6
-
-    - name: Get diffs of changed files
-      run: |
-        for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-          git diff origin/main...HEAD -- $file > ${{ github.workspace }}/${file}.diff
-        done
-
-    - name: Debugging OpenAI API Call
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: |
-        diffs=$(find ${{ github.workspace }} -name "*.diff" -type f -print0 | xargs -0 cat)
-        prompt=$(printf "Your job is to review the following PR and determine if it is spam or not. It is currently hacktober-fest and there is a lot of spam going around. Many users are creating PRs that do not contribute anything very valuable. Here is the PR diff: \\n %s \\n Is this PR spam or not? Return one of the following:\\nSpam\\nNot spam\\n" "$diffs")
-        messages_payload=$(jq -n \
-                            --arg system_content "You are a helpful assistant." \
-                            --arg user_content "$prompt" \
-                            '[{"role": "system", "content": $system_content}, {"role": "user", "content": $user_content}]')
-
-        payload=$(jq -n \
-                            --arg model "gpt-3.5-turbo" \
-                            --argjson messages "$messages_payload" \
-                            '{model: $model, messages: $messages}')
-
-        evaluation=$(curl -s \
-          -H "Content-Type: application/json" \
-          -H "Authorization: Bearer $OPENAI_API_KEY" \
-          -d "$payload" \
-          "https://api.openai.com/v1/chat/completions")
-
-
-        echo "Debug: Raw API response:"
-        echo "$evaluation"
-
-        evaluation_text=$(echo "$evaluation" | jq -r '.choices[0].text')
-        echo "OpenAI Evaluation: $evaluation_text"
-    # - name: Comment PR
-    #   uses: thollander/actions-comment-pull-request@v2
-    #   with:
-    #     message: |
-    #       Hello @${{ github.actor }}! Thanks for opening this PR. I have evaluated your PR and here is the result: ${{ env.evaluation_text }}. Your profile has also been checked for spam, here is the result: ${{ env.response }}. If you think this is a mistake, please contact us.
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure the token is passed
+inputs:
+  openai_api_key:
+    description: 'OpenAI API Key'
+    required: true
+  github_token:
+    description: 'GitHub Token'
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'
