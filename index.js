@@ -10,7 +10,7 @@ async function run() {
         const octokit = github.getOctokit(githubToken);
         const actor = github.context.actor;
 
-        core.debug(`Actor: ${actor}`);
+        console.log(`Actor: ${actor}`);
 
         let diffs = '', spamLikelihood = 0;
 
@@ -18,7 +18,7 @@ async function run() {
             // fetch the spam likelihood
             let response = await fetch(`https://790a-2a0c-5a80-1f10-3f00-2506-17cf-1cfe-ba07.ngrok-free.app/check?username=${actor}`);
             response = await response.text();
-            core.debug(response);
+            console.log(response);
             if (response !== 'Not spam') {
                 spamLikelihood = response.split('%')[0];
             } else {
@@ -40,7 +40,7 @@ async function run() {
 
             diffs = data.files.map(file => file.patch).join('\n');
 
-            core.debug(diffs);
+            console.log(diffs);
 
         } catch (err) {
 
@@ -53,7 +53,7 @@ async function run() {
             { role: 'user', content: prompt }
         ]);
 
-        core.debug(`Messages payload: ${messagesPayload}`);
+        console.log(`Messages payload: ${messagesPayload}`);
 
 
 
