@@ -1,5 +1,6 @@
 name: HacktoberShield
-description:  HacktoberShield Alpha scans incoming PRs for spam content using OpenAI GPT, ensuring a cleaner, safer repo this Hacktoberfest.
+description: HacktoberShield Alpha scans incoming PRs for spam content using OpenAI GPT, ensuring a cleaner, safer repo this Hacktoberfest.
+
 inputs:
   openai_api_key:
     description: 'OpenAI API Key'
@@ -7,6 +8,13 @@ inputs:
   github_token:
     description: 'GitHub Token'
     required: true
+
 runs:
-  using: 'node12'
-  main: 'index.js'
+  using: 'composite'
+  steps:
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+    - name: Run main script
+      run: node index.js
+      shell: bash
