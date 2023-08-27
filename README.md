@@ -22,11 +22,19 @@
 ```yaml
 # .github/workflows/hacktobershield.yml
 
-name: HacktoberShield: SpamBuster for PRs
-
+name: HacktoberShield
 on:
   pull_request:
     types: [opened, synchronize]
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use HacktoberShield Action
+        uses: velocitatem/HacktoberShield@main  # or specify a tag version instead of "main"
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 2️⃣ Add the action steps to the YAML.
