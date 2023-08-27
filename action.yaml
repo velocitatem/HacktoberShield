@@ -12,6 +12,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: debug
+      run: pwd && ls -la
+      shell: bash
     - name: Install dependencies
       run: npm init -y &&  npm install @actions/core @actions/github
       shell: bash
