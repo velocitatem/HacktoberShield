@@ -1,4 +1,4 @@
-name: Anti-Spam PR Checker with Diff and OpenAI Evaluation
+name: HacktoberShield
 description:  HacktoberShield Alpha scans incoming PRs for spam content using OpenAI GPT, ensuring a cleaner, safer repo this Hacktoberfest.
 icon: life-buoy
 on:
