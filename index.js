@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+console.log('Hello world!');
+
 async function run() {
     try {
         const openaiApiKey = core.getInput('openai_api_key');
