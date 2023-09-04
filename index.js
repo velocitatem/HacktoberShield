@@ -56,7 +56,7 @@ async function commentOnPr(commentText) {
             body: commentText
         });
     } catch (error) {
-
+        console.log(error);
     }
 
 }
@@ -66,7 +66,9 @@ async function run() {
         const actor = github.context.actor;
 
         let spamLikelyhood = await spamRegistry(actor);
+        console.log(spamLikelyhood);
         let diffs = await getDiffs();
+        console.log(diffs);
         commentOnPr(`Spam likelihood: ${spamLikelyhood}%\n\nDiffs:\n${diffs}`);
 
 
