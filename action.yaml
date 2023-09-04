@@ -14,12 +14,25 @@ runs:
   main: 'index.js'
 
 jobs:
-  test:
+  hacktoberShieldJob:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
-      - uses: mshick/add-pr-comment@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run index.js
+        run: node index.js
+        env:
+          OPENAI_API_KEY: ${{ inputs.openai_api_key }}
+          GITHUB_TOKEN: ${{ inputs.github_token }}
+
+  comment:
+    needs: hacktoberShieldJob
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on PR
+        uses: mshick/add-pr-comment@v2
         with:
           message: |
-            ${env.RESPONSE}
+            **Hello**
+            🌏
+            !
