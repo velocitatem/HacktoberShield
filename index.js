@@ -39,25 +39,18 @@ async function getDiffs() {
         });
 
         diffs = data.files.map(file => file.patch).join('\n');
-        return diffs;
 
     } catch (err) {
-
+        console.log(err);
     }
+    return diffs;
 }
 
 
 async function commentOnPr(commentText) {
-    try {
-        const { data: comment } = await octokit.issues.createComment({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: github.context.issue.number,
-            body: commentText
-        });
-    } catch (error) {
-        console.log(error);
-    }
+
+    // set env var RESPONSE to the comment text
+    core.exportVariable('RESPONSE', commentText);
 
 }
 

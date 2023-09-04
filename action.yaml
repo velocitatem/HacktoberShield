@@ -12,3 +12,14 @@ inputs:
 runs:
   using: 'node12'
   main: 'index.js'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            ${env.RESPONSE}
