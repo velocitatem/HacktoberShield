@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const openai = require('openai');
+const OpenAI = require('openai');
 const openaiApiKey = core.getInput('openai_api_key');
 const githubToken = core.getInput('github_token');
 const octokit = github.getOctokit(githubToken);
@@ -20,7 +20,7 @@ async function aiDiffAnalsis(diffs) {
     const openaiClient = new openai(openaiApiKey);
 
 
-    const openai = new OpenAI();
+    const openai = new OpenAI(); // const OpenAI = require('openai-api');
 
     const response = await openai.chat.completions.create({
         model: 'gpt-4',
