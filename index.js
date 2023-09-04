@@ -14,6 +14,9 @@ async function aiDiffAnalsis(diffs) {
 
     // get the key from the github secret
     const openaiApiKey = core.getInput('openai_api_key');
+    if(!openaiApiKey) {
+        return;
+    }
     const openaiClient = new openai(openaiApiKey);
 
 
@@ -26,7 +29,7 @@ async function aiDiffAnalsis(diffs) {
 
     let textual = response.choices[0];
 
-    console.log(textual);
+    return textual;
 
 }
 
@@ -52,6 +55,23 @@ async function spamRegistry(actor) {
 }
 
 async function getDiffs() {
+    let diffs;
+
+    try {
+        // fetch the diffs
+        const { data } = await octokit.repos.compareCommits({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            base: 'origin/main',
+            head: 'HEAD'
+        });
+
+        diffs = data.files.map(file => file.patch).join('\n');
+        return diffs;
+
+    } catch (err) {
+
+    }
 }
 
 async function run() {
@@ -59,30 +79,8 @@ async function run() {
         const actor = github.context.actor;
 
         let spamLikelyhood = await spamRegistry(actor);
-
-        try {
-            // fetch the diffs
-            const { data } = await octokit.repos.compareCommits({
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
-                base: 'origin/main',
-                head: 'HEAD'
-            });
-
-            diffs = data.files.map(file => file.patch).join('\n');
-
-            console.log(diffs);
-
-        } catch (err) {
-
-        }
-
-
-
-
-        console.log(`Messages payload: ${messagesPayload}`);
-
-
+        let diffs = await getDiffs();
+        let aiAnalysis = await aiDiffAnalsis(diffs);
 
     } catch (error) {
         core.setFailed(error.message);
