@@ -1,37 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const OpenAI = require('openai');
 const openaiApiKey = core.getInput('openai_api_key');
 const githubToken = core.getInput('github_token');
 const octokit = github.getOctokit(githubToken);
 
-async function aiDiffAnalsis(diffs) {
-    const prompt = `Your job is to review the following PR and determine if it is spam or not. It is currently hacktober-fest and there is a lot of spam going around. Many users are creating PRs that do not contribute anything very valuable. Here is the PR diff: \n ${diffs} \n Is this PR spam or not? Return one of the following:\nSpam\nNot spam`;
-    const messagesPayload =  [
-        { role: 'system', content: 'You are a helpful assistant.' },
-        { role: 'user', content: prompt }
-    ];
-
-    // get the key from the github secret
-    const openaiApiKey = core.getInput('openai_api_key');
-    if(!openaiApiKey) {
-        return;
-    }
-    const openaiClient = new openai(openaiApiKey);
-
-
-    const openai = new OpenAI(); // const OpenAI = require('openai-api');
-
-    const response = await openai.chat.completions.create({
-        model: 'gpt-4',
-        messages: messagesPayload,
-    });
-
-    let textual = response.choices[0];
-
-    return textual;
-
-}
 
 async function spamRegistry(actor) {
 
@@ -74,13 +46,29 @@ async function getDiffs() {
     }
 }
 
+
+async function commentOnPr(commentText) {
+    try {
+        const { data: comment } = await octokit.issues.createComment({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: github.context.issue.number,
+            body: commentText
+        });
+    } catch (error) {
+
+    }
+
+}
+
 async function run() {
     try {
         const actor = github.context.actor;
 
         let spamLikelyhood = await spamRegistry(actor);
         let diffs = await getDiffs();
-        let aiAnalysis = await aiDiffAnalsis(diffs);
+        commentOnPr(`Spam likelihood: ${spamLikelyhood}%\n\nDiffs:\n${diffs}`);
+
 
     } catch (error) {
         core.setFailed(error.message);
