@@ -1,0 +1,31 @@
+{
+  "pull_request": {
+    "head": {
+      "ref": "spam-branch",
+      "repo": {
+        "full_name": "yourusername/yourrepository",
+        "html_url": "https://github.com/yourusername/yourrepository/tree/spam-branch"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "yourusername/yourrepository",
+        "html_url": "https://github.com/yourusername/yourrepository/tree/main"
+      }
+    },
+    "user": {
+      "login": "spammer",
+      "html_url": "https://github.com/spammer"
+    },
+    "title": "Spam Pull Request",
+    "body": "This is a spam PR. Please ignore.",
+    "number": 42,
+    "html_url": "https://github.com/yourusername/yourrepository/pull/42",
+    "changed_files": 1,
+    "additions": 10,
+    "deletions": 0,
+    "commits": 1
+  }
+}
+
