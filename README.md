@@ -20,14 +20,12 @@
 1️⃣ Create a `.github/workflows/hacktobershield.yml` file in your repository with:
 
 ```yaml
-# .github/workflows/hacktobershield.yml
-
 name: HacktoberShield
 on:
   pull_request:
     types: [opened, synchronize]
 jobs:
-  my-job:
+  hacktoberShieldJob:
     runs-on: ubuntu-latest
     steps:
       - name: Use HacktoberShield Action
@@ -35,6 +33,17 @@ jobs:
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  comment:
+    needs: hacktoberShieldJob
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comment on PR
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: "SPAM ANALYSIS COMPLETED\nREPORT:"
 ```
 
 2️⃣ Add the action steps to the YAML.
