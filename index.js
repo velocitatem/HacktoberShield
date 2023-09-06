@@ -36,6 +36,7 @@ async function getDiffs() {
             repo: github.context.repo.repo,
             pull_number: github.context.payload.pull_request.number
         });
+        console.log(pullRequest);
         diffs = pullRequest.body;
 
 
