@@ -31,14 +31,13 @@ async function getDiffs() {
 
     try {
         // fetch the diffs
-        const { data } = await octokit.repos.compareCommits({
+        const {data: pullRequest} = await octokit.rest.pulls.get({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
-            base: 'origin/main',
-            head: 'HEAD'
+            pull_number: github.context.payload.pull_request.number
         });
+        diffs = pullRequest.body;
 
-        diffs = data.files.map(file => file.patch).join('\n');
 
     } catch (err) {
         console.log(err);
