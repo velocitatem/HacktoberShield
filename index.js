@@ -3,6 +3,7 @@ const github = require('@actions/github');
 const openaiApiKey = core.getInput('openai_api_key');
 const githubToken = core.getInput('github_token');
 const octokit = github.getOctokit(githubToken);
+const axios = require('axios');
 
 
 async function spamRegistry(actor) {
@@ -37,7 +38,12 @@ async function getDiffs() {
             pull_number: github.context.payload.pull_request.number
         });
         console.log(pullRequest);
-        diffs = pullRequest.body;
+        let durl = pullRequest.diff_url;
+        // using
+        // add the token to the url
+        durl = durl.replace('https://', `https://velocitatem:${githubToken}@`);
+        diffs = await axios.get(durl);
+        console.log(diffs.data);
 
 
     } catch (err) {
