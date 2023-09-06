@@ -39,12 +39,10 @@ async function getDiffs() {
         });
         console.log(pullRequest);
         let durl = pullRequest.diff_url;
-        // using
-        // add the token to the url
-        durl = durl.replace('https://', `https://velocitatem:${githubToken}@`);
+        // fetch the diffs
         diffs = await axios.get(durl);
-        console.log(diffs.data);
-
+        console.log(diffs);
+        diffs = diffs.data;
 
     } catch (err) {
         console.log(err);
