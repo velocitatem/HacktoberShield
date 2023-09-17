@@ -4,6 +4,7 @@ const openaiApiKey = core.getInput('openai_api_key');
 const githubToken = core.getInput('github_token');
 const octokit = github.getOctokit(githubToken);
 const axios = require('axios');
+const URL = "https://glduc7t8ke.execute-api.eu-north-1.amazonaws.com"
 
 
 async function spamRegistry(actor) {
@@ -12,7 +13,7 @@ async function spamRegistry(actor) {
 
     try {
         // fetch the spam likelihood
-        let response = await fetch(`https://790a-2a0c-5a80-1f10-3f00-2506-17cf-1cfe-ba07.ngrok-free.app/check?username=${actor}`);
+        let response = await fetch(URL+`/default/handleUserReports?userId=${actor}&action=getCount`);
         response = await response.text();
         console.log(response);
         if (response !== 'Not spam') {
@@ -25,6 +26,19 @@ async function spamRegistry(actor) {
 
     }
     return spamLikelihood;
+}
+
+
+async function reportUser(username) {
+        try {
+            // report the user
+            let response = await fetch(URL+`/default/handleUserReports?userId=${username}&action=report`);
+            response = await response.text();
+            console.log(response);
+
+        } catch (error) {
+
+        }
 }
 
 async function getDiffs() {
