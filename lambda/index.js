@@ -18,30 +18,45 @@ exports.handler = async (event) => {
 
 
     if (action === "report") {
-        await dynamo.update({
-            TableName: "UserReports",
-            Key: { userId },
-            UpdateExpression: "ADD reports :inc",
-            ExpressionAttributeValues: { ":inc": 1 },
-            ReturnValues: "UPDATED_NEW"
-        }).promise();
+        try {
+            await dynamo.update({
+                TableName: "UserReports",
+                Key: { userId },
+                UpdateExpression: "ADD reports :inc",
+                ExpressionAttributeValues: { ":inc": 1 },
+                ReturnValues: "UPDATED_NEW"
+            }).promise();
 
-        return {
-            statusCode: 200,
-            body: "Report added."
-        };
+            return {
+                statusCode: 200,
+                body: "Report added."
+            };
+        } catch (err) {
+            console.log(err);
+            return {
+                statusCode: 500,
+                body: "Error adding report."
+            };
+        }
     }
 
     if (action === "getCount") {
-        const result = await dynamo.get({
-            TableName: "UserReports",
-            Key: { userId }
-        }).promise();
+        try {
+            const result = await dynamo.get({
+                TableName: "UserReports",
+                Key: { userId }
+            }).promise();
 
-        return {
-            statusCode: 200,
-            body: `Report count: ${result.Item?.reports || 0}`
-        };
-
-    }
+            return {
+                statusCode: 200,
+                body: `Report count: ${result.Item?.reports || 0}`
+            };
+        } catch (err) {
+            console.log(err);
+            return {
+                statusCode: 500,
+                body: "Error getting report count."
+            };
+        }
+   }
 };
