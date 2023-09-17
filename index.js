@@ -13,7 +13,7 @@ async function spamRegistry(actor) {
 
     try {
         // fetch the spam likelihood
-        let response = await fetch(URL+`/default/handleUserReports?userId=${actor}&action=getCount`);
+        let response = await axios.get(URL+`/default/handleUserReports?userId=${actor}&action=getCount`);
         response = await response.text();
         console.log(response);
         if (response !== 'Not spam') {
@@ -32,7 +32,7 @@ async function spamRegistry(actor) {
 async function reportUser(username) {
         try {
             // report the user
-            let response = await fetch(URL+`/default/handleUserReports?userId=${username}&action=report`);
+            let response = await axios.get(URL+`/default/handleUserReports?userId=${username}&action=report`);
             response = await response.text();
             console.log(response);
 
