@@ -77,8 +77,18 @@ async function getDiffs() {
 
 async function commentOnPr(commentText) {
 
-    // set env var RESPONSE to the comment text
-    core.exportVariable('RESPONSE', commentText);
+    try {
+        // comment on the PR
+        await octokit.rest.issues.createComment({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: github.context.payload.pull_request.number,
+            body: commentText
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
 
 }
 
