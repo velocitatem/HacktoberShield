@@ -37,7 +37,7 @@ async function reportUser(username) {
             console.log(response);
 
         } catch (error) {
-
+            console.log(error);
         }
 }
 
