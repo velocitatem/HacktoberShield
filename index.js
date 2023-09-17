@@ -23,7 +23,7 @@ async function spamRegistry(actor) {
         }
 
     } catch (error) {
-
+        console.log(error);
     }
     return spamLikelihood;
 }
