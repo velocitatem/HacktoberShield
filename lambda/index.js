@@ -2,9 +2,20 @@ const AWS = require("aws-sdk");
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
-    const userId = event.queryStringParameters.userId;
-    const action = event.queryStringParameters.action; // 'report' or 'getCount'
-    console.log(event);
+    const { userId, action } = event.queryStringParameters || {}; // 'report' or 'getCount'
+    if (!userId || !action) {
+        return {
+            statusCode: 400,
+            body: "Missing userId or action"
+        };
+    } else if (action !== "report" && action !== "getCount") {
+        return {
+            statusCode: 400,
+            body: "Invalid action"
+        };
+    }
+
+
 
     if (action === "report") {
         await dynamo.update({
