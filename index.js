@@ -53,10 +53,20 @@ async function getDiffs() {
         });
         console.log(pullRequest);
         let durl = pullRequest.diff_url;
-        // fetch the diffs
-        diffs = await axios.get(durl);
-        console.log(diffs);
+        // diffs = await axios.get(durl);
+        try {
+            diffs = await axios.get(durl);
+        } catch (err) {
+            try {
+                if (err.response.status === 404) {
+                    diffs = await axios.get(durl + '?token=' + githubToken);
+                } else { return ''; }
+            } catch (err) {
+                return '';
+            }
+        }
         diffs = diffs.data;
+        console.log(diffs);
 
     } catch (err) {
         console.log(err);
