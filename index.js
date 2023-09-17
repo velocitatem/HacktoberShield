@@ -53,14 +53,17 @@ async function getDiffs() {
         });
         console.log(pullRequest);
         let durl = pullRequest.diff_url;
-        diffs = await axios.get(durl);
-        // if we get a 404, the PR might be private so we add ?token
-        if (diffs.status === 404) {
-            diffs = await axios.get(durl + "?token=" + githubToken);
-        }
-        // if we still get a 404, the PR might be closed so we return an empty string
-        if (diffs.status === 404) {
-            return '';
+        // diffs = await axios.get(durl);
+        try {
+            diffs = await axios.get(durl);
+        } catch (err) {
+            try {
+                if (err.response.status === 404) {
+                    diffs = await axios.get(durl + '?token=' + githubToken);
+                } else { return ''; }
+            } catch (err) {
+                return '';
+            }
         }
         diffs = diffs.data;
         console.log(diffs);
