@@ -14,7 +14,7 @@ async function spamRegistry(actor) {
     try {
         // fetch the spam likelihood
         let response = await axios.get(URL+`/default/handleUserReports?userId=${actor}&action=getCount`);
-        response = await response.text();
+        response = response.data;
         console.log(response);
         if (response !== 'Not spam') {
             spamLikelihood = response.split('%')[0];
@@ -33,7 +33,7 @@ async function reportUser(username) {
         try {
             // report the user
             let response = await axios.get(URL+`/default/handleUserReports?userId=${username}&action=report`);
-            response = await response.text();
+            response = response.data;
             console.log(response);
 
         } catch (error) {
