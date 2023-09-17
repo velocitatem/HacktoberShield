@@ -100,7 +100,17 @@ async function run() {
         console.log(spamLikelyhood);
         let diffs = await getDiffs();
         console.log(diffs);
-        commentOnPr(`Spam likelihood: ${spamLikelyhood}%\n\nDiffs:\n${diffs}`);
+        let markdownComment = `
+Hi! I'm a bot that checks for spam in PRs. I've found that this PR is ${spamLikelyhood}% likely to be spam. If you think this is a mistake, please try to contact the owner of this repository.
+
+This PR can also be reported on the following [link](https://glduc7t8ke.execute-api.eu-north-1.amazonaws.com/default/handleUserReports?userId=${actor}&action=report) if you think it is spam.
+`
+        if (spamLikelyhood > 50) {
+            await commentOnPr(markdownComment);
+            await reportUser(actor);
+        } else {
+            await commentOnPr(`This PR is most likely not spam. Spam likelyhood: ${spamLikelyhood}%`);
+        }
 
 
     } catch (error) {
