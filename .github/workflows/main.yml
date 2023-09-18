@@ -1,0 +1,14 @@
+name: Hacktber Hield Workflow
+on:
+  push:
+    branches:
+      - example
+jobs:
+  hacktoberShieldJob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use HacktoberShield Action
+        uses: velocitatem/HacktoberShield@main  # or specify a tag version instead of "main"
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
