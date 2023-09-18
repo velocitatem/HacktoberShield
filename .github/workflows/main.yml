@@ -1,6 +1,6 @@
 name: Hacktber Hield Workflow
 on:
-  push:
+  pull_request:
     branches:
       - example
 jobs:
