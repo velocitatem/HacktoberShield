@@ -6,6 +6,9 @@ on:
 jobs:
   hacktoberShieldJob:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - name: Use HacktoberShield Action
         uses: velocitatem/HacktoberShield@main  # or specify a tag version instead of "main"
